@@ -1,0 +1,28 @@
+# Showcase (demo/) → GitLab Pages
+
+stages:
+  - deploy
+
+default:
+  tags:
+    - linux-k8s
+    - build
+
+create-pages:
+  stage: deploy
+  image: registry.tochka-tech.com/proxy_docker-io/library/node:22
+  script:
+    - npm ci
+    - |
+      if [ -n "${CI_PAGES_URL:-}" ]; then
+        export VITE_BASE_PATH="$(node -e "const u=new URL(process.env.CI_PAGES_URL); let p=u.pathname||'/'; if(!p.endsWith('/')) p+='/'; process.stdout.write(p)")"
+      else
+        export VITE_BASE_PATH="/ai-learning/design-system/"
+      fi
+      echo "VITE_BASE_PATH=$VITE_BASE_PATH"
+      npm run build:demo
+    - mv demo/dist public
+  pages:
+    publish: public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd mass-signing && npm ci",
+  "buildCommand": "cd mass-signing && npm run build",
+  "outputDirectory": "mass-signing/dist"
+}

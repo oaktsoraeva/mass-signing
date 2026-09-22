@@ -1,0 +1,824 @@
+@import "../../design-system/src/assets/Style/color.css";
+@import "../../design-system/src/assets/Style/font.css";
+@import "../../design-system/src/assets/Style/radius.css";
+@import "../../design-system/src/assets/Style/spacing.css";
+@import "../../design-system/src/assets/Style/shadow.css";
+@import "../../design-system/src/assets/Style/animation.css";
+@import "../../design-system/src/assets/Icon/icon.css";
+
+:root {
+  --font-family-tt-norms-tochka-extended: "TT Norms Tochka Extended", sans-serif;
+  /* Bank/Popup/Inverse из макета — в токенах кита такого цвета нет */
+  --coach-surface: #303030;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--page-primary);
+  color: var(--primitive-primary);
+  font-family: var(--font-family-tt-norms-tochka-extended);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* В макете аватар клиента категорийного цвета, а в ките по умолчанию брендовый */
+.main-page-navigation-bar__avatar {
+  background-color: var(--category-indigo);
+}
+
+/* ─── Список документов ─────────────────────────────────────────────── */
+
+/* Вертикальный ритм из макета: блоки через 32px */
+.doc-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-group-list-spacing);
+  padding: 0 var(--page-horizontal-padding);
+}
+
+/* В макете у боковой навигации нет заголовка — только кнопка «назад» и ссылки */
+.navigation-bar.doc-nav .navigation-bar__header {
+  display: none;
+}
+
+.doc-page__tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-5x);
+  min-height: 40px;
+}
+
+.doc-page__actions-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+}
+
+.doc-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.doc-page__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+}
+
+.doc-page__search {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.doc-page__placeholder {
+  padding: var(--spacing-16x) 0;
+  text-align: center;
+  color: var(--primitive-secondary);
+}
+
+.doc-page__toast {
+  position: fixed;
+  right: var(--spacing-6x);
+  bottom: var(--spacing-24x);
+  z-index: 200;
+  max-width: 360px;
+}
+
+/* Header Button без подписи: убираем зазор до пустого лейбла */
+.doc-page__settings .header-button {
+  gap: 0;
+}
+
+.doc-page__select-all {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--primitive-brand);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+/* Колонки таблицы из макета (Main Container 1120, контент 1080):
+   чекбокс 64 · Документ 269 · Контрагент flex · Сумма 160 · НДС/1С/файл 80 · меню 64 */
+.doc-table {
+  --doc-table-columns: 64px 269px minmax(0, 1fr) 160px 80px 80px 80px 64px;
+}
+
+/* Ниже ширины макета «Контрагенту» остаётся меньше места, чем «Документу»,
+   и он начинает рвать название с ИНН — делим место между ними пополам */
+@media (max-width: 1439px) {
+  .doc-table {
+    --doc-table-columns: 64px minmax(0, 1fr) minmax(0, 1fr) 160px 80px 80px 80px 64px;
+  }
+}
+
+/* Ниже 1024px PageLayout сам добавляет горизонтальный паддинг — свой убираем,
+   иначе отступ удваивается (в макете он 20px) */
+@media (max-width: 1023px) {
+  .doc-page {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Выравнивание ячеек (в UI-ките у TableCell нет пропа выравнивания) */
+
+.table-cell.doc-cell--center {
+  justify-content: center;
+}
+
+/* В макете у ячеек-действий вертикальный паддинг 8px, у ячеек с текстом — 10px */
+.table-cell.doc-cell--action {
+  padding-top: var(--spacing-2x);
+  padding-bottom: var(--spacing-2x);
+}
+
+.table-cell.doc-cell--center-text .table-cell__content {
+  align-items: center;
+}
+
+.table-cell.doc-cell--right .table-cell__content {
+  align-items: flex-end;
+}
+
+/* Контент прижат к верхнему краю: в ките .table-cell центрирует по вертикали */
+.table-cell.doc-cell--top {
+  align-items: flex-start;
+}
+
+/* В макете длинное имя контрагента переносится на две строки,
+   а в ките заголовок ячейки всегда однострочный с многоточием */
+.table-cell.doc-cell--wrap .table-cell__title {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.doc-cell__menu {
+  color: var(--primitive-primary);
+}
+
+.file-pdf {
+  display: block;
+  flex-shrink: 0;
+}
+
+.column-status {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Валидация из макета: подпись футера краснеет, кнопки остаются активными */
+.doc-footer--error .footer__description {
+  color: var(--primitive-error);
+}
+
+/* ─── Общее ─────────────────────────────────────────────────────────── */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Кнопки-иконки (в UI-ките такого компонента нет) */
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--container-transparent-1);
+  color: var(--primitive-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.icon-button:hover {
+  background: var(--state-container-transparent-1-active);
+}
+
+.icon-button--32 {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--rounding-2x);
+}
+
+/* Поисковая строка (в UI-ките нет отдельного компонента) */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+  height: 32px;
+  padding: 0 var(--spacing-2-5x);
+  border-radius: var(--rounding-2-5x);
+  background: var(--container-transparent-1);
+}
+
+.search-bar__icon {
+  color: var(--primitive-neutral-4);
+  flex-shrink: 0;
+}
+
+.search-bar__field {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  background: transparent;
+  font-family: inherit;
+  color: var(--primitive-primary);
+}
+
+.search-bar__field::placeholder {
+  color: var(--primitive-neutral-4);
+  opacity: 1;
+}
+
+/* Теги статусов */
+
+.tag.status-tag {
+  --tag-radius: var(--rounding-1-5x);
+}
+
+.tag.status-tag--brand {
+  --tag-surface-color: var(--bg-brand-2);
+  --tag-text-color: var(--primitive-brand);
+}
+
+.tag.status-tag--success {
+  --tag-surface-color: var(--bg-success-2);
+  --tag-text-color: var(--primitive-success);
+}
+
+/* Аватар контрагента с логотипом оператора ЭДО */
+
+.contractor-avatar {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.contractor-avatar__fill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--rounding-pill);
+  color: var(--primitive-default);
+  /* маска из макета вырезает место под бейдж */
+  mask-image: url("./assets/icons/avatar-badge-mask.svg");
+  mask-size: 40px 40px;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("./assets/icons/avatar-badge-mask.svg");
+  -webkit-mask-size: 40px 40px;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.contractor-avatar__badge {
+  position: absolute;
+  left: 26px;
+  top: -2px;
+  display: block;
+  border-radius: var(--rounding-pill);
+}
+
+/* ─── Мастер «Подписание и отправка» ────────────────────────────────── */
+
+.wizard-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-group-list-spacing);
+  padding-bottom: var(--spacing-16x);
+}
+
+.wizard-page__title {
+  margin: 0;
+}
+
+/* Зелёная плашка под шапкой сайта */
+.page-alert {
+  position: sticky;
+  top: 74px;
+  z-index: 90;
+}
+
+/* Шаг «Куда отправить документы» */
+
+.cp-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.cp-group__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2x);
+}
+
+.cp-group__title,
+.cp-group__caption {
+  margin: 0;
+}
+
+.cp-group__caption {
+  color: var(--primitive-secondary);
+}
+
+.cp-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6x);
+}
+
+.cp-list__item {
+  position: relative;
+}
+
+.cp-row.ds-cell {
+  cursor: pointer;
+}
+
+.cp-row__inn,
+.cp-row__operator {
+  color: var(--primitive-secondary);
+}
+
+/* В макете при валидации вместо ИНН красная подсказка */
+.cp-row__error {
+  color: var(--primitive-error);
+}
+
+.cp-row__trash {
+  display: flex;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--primitive-neutral-4);
+  cursor: pointer;
+}
+
+/* Cell красит заголовок аккордеона в secondary, в макете он основной */
+.cp-accordeon .accordeon-cell__title {
+  color: var(--primitive-primary);
+}
+
+/* Онбординг-подсказка: тёмная плашка с «хвостом» к аватару контрагента */
+
+/* В макете подсказка лежит поверх списка и указывает «хвостом» на аватар */
+.coach {
+  position: absolute;
+  left: 0;
+  top: 48px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4x);
+  width: 360px;
+  padding: var(--spacing-4x);
+  border-radius: var(--rounding-3x);
+  background: var(--coach-surface);
+  box-shadow: var(--Popup-Inverse);
+}
+
+.coach::before {
+  position: absolute;
+  left: 14px;
+  top: -5px;
+  width: 12px;
+  height: 12px;
+  transform: rotate(45deg);
+  border-radius: var(--rounding-0-5x);
+  background: var(--coach-surface);
+  content: "";
+}
+
+.coach__text {
+  margin: 0;
+  color: var(--primitive-default);
+}
+
+/* Кнопки на инверсной поверхности в ките нет — собираем на токенах */
+.coach__button {
+  flex-shrink: 0;
+  border: 0;
+  padding: var(--spacing-1-5x) var(--spacing-4x);
+  border-radius: var(--rounding-2-5x);
+  background: var(--container-transparent-2-inverse);
+  color: var(--primitive-default);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Шторка выбора системы ЭДО */
+
+.operator-drawer__title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5x);
+}
+
+.operator-drawer__inn {
+  color: var(--primitive-secondary);
+}
+
+.drawer-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+  padding: var(--page-top-padding) var(--page-horizontal-padding) var(--page-bottom-padding);
+}
+
+.drawer-body__hint {
+  margin: 0;
+}
+
+.operator-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.operator-card__row {
+  cursor: pointer;
+}
+
+.operator-card__logo {
+  display: block;
+  flex-shrink: 0;
+  border-radius: var(--rounding-pill);
+}
+
+/* Шаг «Как подписать» */
+
+.sign-methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6x);
+}
+
+.sign-method.ds-cell {
+  cursor: pointer;
+}
+
+/* В макете недоступный способ гаснет целиком */
+.sign-method--disabled.ds-cell {
+  cursor: default;
+  opacity: 0.4;
+}
+
+
+.sign-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5x);
+  /* Колонка PageLayout без верхнего паддинга — выравниваем по контенту */
+  padding-top: var(--page-top-padding);
+}
+
+/* Карточка-счётчик в правой колонке */
+.sign-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2x);
+  padding: var(--spacing-5x);
+  border: 1px solid var(--primitive-neutral-1);
+  border-radius: var(--rounding-3x);
+}
+
+.sign-summary__row,
+.sign-summary__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-4x);
+}
+
+.sign-summary__total {
+  margin-top: var(--spacing-2x);
+  padding-top: var(--spacing-4x);
+  border-top: 1px solid var(--primitive-neutral-1);
+}
+
+/* В ките у Footer с одной кнопкой всегда variant="primary" и пропа для смены нет.
+   Переопределяем переменные Button значениями secondary */
+.footer--neutral .footer__button.button--primary {
+  --button-bg: var(--container-transparent-1);
+  --button-color: var(--primitive-primary);
+  --button-bg-hovered: var(--state-container-transparent-1-active);
+  --button-spinner-color: var(--primitive-brand);
+}
+
+/* В ките подложка шторки прозрачная, в макетах страница под ней затемнена */
+.drawer__overlay {
+  background: var(--overlay-popup);
+}
+
+/* Навигаторы по спискам документов внутри шторки способа */
+
+.sign-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4x);
+}
+
+.sign-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2x);
+  border: 0;
+  padding: var(--spacing-5x);
+  border-radius: var(--rounding-3x);
+  background: var(--page-primary);
+  color: var(--primitive-primary);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.sign-nav__title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1x);
+}
+
+.sign-nav__description {
+  color: var(--primitive-secondary);
+}
+
+/* Шторка способа лежит на вторичном фоне, карточки навигаторов — белые */
+.method-drawer .drawer__panel,
+.method-drawer .drawer-header,
+.method-drawer .drawer-footer {
+  background: var(--page-secondary);
+}
+
+/* Шторки подписания */
+
+.sign-drawer .drawer__header {
+  position: relative;
+}
+
+.sign-drawer__reset {
+  position: absolute;
+  right: var(--page-horizontal-padding);
+  top: 32px;
+  transform: translateY(-50%);
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--primitive-brand);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.sign-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4x);
+}
+
+.sign-list__title {
+  margin: 0;
+}
+
+.sign-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6x);
+}
+
+.sign-row.ds-cell {
+  cursor: pointer;
+}
+
+.cert-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4x);
+}
+
+.cert-fields__token {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Значок доверенности из макета — в ките такой иконки нет */
+.poa-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--rounding-2-5x);
+  background: var(--category-orchid);
+  color: var(--primitive-default);
+}
+
+.poa-powers {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--primitive-brand);
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Dropdown ставит галку той строке, у которой title совпал с value, — обе
+   подписи называются одинаково, поэтому выбранную отмечаем сами */
+.cert-option:not(.cert-option--selected) .dropdown-popup__checkmark {
+  visibility: hidden;
+}
+
+/* «Не получится подписать» */
+
+.blocked-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-element-list-spacing);
+}
+
+.blocked-group__title {
+  margin: 0;
+}
+
+/* Карточка документа */
+
+.doc-card-drawer .drawer__panel,
+.doc-card-drawer .drawer-header,
+.doc-card-drawer .drawer-footer {
+  background: var(--page-secondary);
+}
+
+.doc-card-body {
+  gap: var(--content-element-list-spacing);
+}
+
+.doc-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-2x);
+}
+
+.doc-card-head__title {
+  margin: 0;
+}
+
+.doc-card-head__meta {
+  display: flex;
+  gap: var(--spacing-5x);
+  margin: 0;
+  color: var(--primitive-secondary);
+}
+
+.doc-card-head__value {
+  color: var(--primitive-primary);
+}
+
+.doc-card-warning {
+  display: flex;
+  gap: var(--spacing-3x);
+  padding: var(--spacing-4x);
+  border: 1px solid var(--primitive-neutral-1);
+  border-radius: var(--rounding-3x);
+}
+
+.doc-card-warning__icon {
+  flex-shrink: 0;
+  color: var(--primitive-warning, #f5a623);
+}
+
+.doc-card-warning__text {
+  margin: 0;
+}
+
+.doc-card-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4x);
+  padding: var(--spacing-5x);
+  border-radius: var(--rounding-4x);
+  background: var(--page-primary);
+}
+
+.doc-card-block__title {
+  margin: 0;
+}
+
+.doc-card-block__row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4x);
+}
+
+.doc-card-block__row p {
+  margin: 0;
+}
+
+.doc-card-block__inn {
+  color: var(--primitive-secondary);
+}
+
+.doc-card-block__file {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--rounding-2-5x);
+  background: var(--bg-neutral-2);
+}
+
+/* Код подтверждения для НЭП */
+
+.sms-modal .modal__content-inner {
+  padding-bottom: var(--spacing-10x);
+}
+
+.sms-code {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 480px;
+  text-align: center;
+}
+
+.sms-code__title,
+.sms-code__hint,
+.sms-code__resend {
+  margin: 0;
+}
+
+.sms-code__hint {
+  margin-top: var(--spacing-2x);
+  color: var(--primitive-secondary);
+}
+
+.sms-code__digits {
+  display: flex;
+  gap: var(--spacing-4x);
+  margin-top: var(--spacing-10x);
+}
+
+/* Пустая ячейка кода в макете — короткая чёрточка */
+.sms-code__digit {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 20px;
+  height: 30px;
+  border-bottom: 2px solid var(--primitive-primary);
+}
+
+/* Поле нужно только чтобы поймать ввод: цифры рисуют ячейки выше */
+.sms-code__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  padding: 0;
+  opacity: 0;
+}
+
+.sms-code__resend {
+  margin-top: auto;
+  color: var(--primitive-secondary);
+}
+
+.sms-code__link {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--primitive-brand);
+  cursor: pointer;
+  font: inherit;
+}

@@ -1,0 +1,17 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Content">
+<mask id="mask0_0_112" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="40" height="40">
+<circle id="Mask" cx="20" cy="20" r="20" fill="#191919"/>
+</mask>
+<g mask="url(#mask0_0_112)">
+<g id="Saby">
+<rect width="40" height="40" fill="#F7F7F7"/>
+<g id="Logo">
+<path d="M24.204 13.321L28.3333 11.9743L25.089 16.529L24.204 13.321Z" fill="#0C94FF"/>
+<path d="M25.5804 18.2899L24.204 13.321L14.5692 33.4034L25.5804 18.2899Z" fill="#0C94FF"/>
+<path d="M25.5804 18.2885L10.8333 8.35084L20.8613 24.7066L25.5804 18.2885Z" fill="#0C94FF"/>
+</g>
+</g>
+</g>
+</g>
+</svg>

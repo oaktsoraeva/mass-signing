@@ -1,0 +1,21 @@
+# Source files
+src/
+demo/
+
+# Backups
+backup/
+backup_ds/
+
+# Development
+.DS_Store
+*.tsbuildinfo
+node_modules/
+
+# Config
+vite.config.ts
+tsconfig.json
+tsconfig.node.json
+.gitignore
+
+# Documentation
+README.md is included by default
