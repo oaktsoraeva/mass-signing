@@ -157,6 +157,8 @@ export default function App() {
     setDrawerContractorId(null)
     setHasSendValidationError(false)
     setAlert('Контрагент изменён')
+    // Это был последний контрагент без ЭДО — на шаге больше нечего делать
+    if (unmapped.length === 1 && unmapped[0].id === contractorId) enterSignScreen(true)
   }
 
   const handleContinueFromSend = () => {
