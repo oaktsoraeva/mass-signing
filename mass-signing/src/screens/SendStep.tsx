@@ -1,6 +1,7 @@
 import { AccordeonCell, Cell, Footer, NavigationBar, PageLayout } from '@ds'
 import { EDO_OPERATORS } from '../data'
 import { ContractorAvatar } from '../components/ContractorAvatar'
+import { ADAPTIVE_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
 import type { Contractor } from '../types'
 
 interface SendStepProps {
@@ -32,6 +33,7 @@ export function SendStep({
   onBack,
   onContinue,
 }: SendStepProps) {
+  const isAdaptive = useMediaQuery(ADAPTIVE_QUERY)
   const renderRow = (contractor: Contractor, withOperator: boolean) => {
     const operator = EDO_OPERATORS.find((o) => o.id === contractor.operator)
 
@@ -64,7 +66,7 @@ export function SendStep({
     <>
       <PageLayout
         size="s"
-        topOffset={74}
+        topOffset={isAdaptive ? 0 : 74}
         navigationBar={
           <NavigationBar
             title="Подписание и отправка"
@@ -78,6 +80,12 @@ export function SendStep({
               { kind: 'step', label: 'Куда отправить', state: 'current' },
               { kind: 'step', label: 'Как подписать', state: 'upcoming' },
             ]}
+            /* В адаптиве шаги превращаются в полоску прогресса */
+            titleVariant="step-progress"
+            progress={{ value: 1, maxSteps: 2, ariaLabel: 'Шаг 1 из 2' }}
+            rightAccessoryVariant="none"
+            leftAriaLabel="Назад"
+            onLeftClick={onBack}
           />
         }
       >

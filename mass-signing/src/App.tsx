@@ -19,6 +19,8 @@ import { CannotSignDrawer } from './components/CannotSignDrawer'
 import { KepOnlyDrawer } from './components/KepOnlyDrawer'
 import { SmsCodeModal } from './components/SmsCodeModal'
 import { DocumentCardDrawer } from './components/DocumentCardDrawer'
+import { DesktopOnlyScreen } from './components/DesktopOnlyScreen'
+import { ADAPTIVE_QUERY, useMediaQuery } from './hooks/useMediaQuery'
 import {
   CERTIFICATES,
   CLIENT_INITIALS,
@@ -41,6 +43,7 @@ type Screen = 'list' | 'send' | 'sign'
 type SignStage = 'method' | 'documents' | 'kep-only' | 'blocked' | 'sms-codes'
 
 export default function App() {
+  const isAdaptive = useMediaQuery(ADAPTIVE_QUERY)
   const [screen, setScreen] = useState<Screen>('list')
   const [documents, setDocuments] = useState<DocumentRow[]>(INITIAL_DOCUMENTS)
   const [contractors, setContractors] = useState<Contractor[]>(INITIAL_CONTRACTORS)
@@ -67,6 +70,8 @@ export default function App() {
   const [poaId, setPoaId] = useState<string | undefined>(undefined)
   const [cardDocumentId, setCardDocumentId] = useState<string | null>(null)
   const [isFinishOpen, setIsFinishOpen] = useState(false)
+  /** В адаптиве КЭП заменяется экраном «Продолжите с компьютера» */
+  const [isDesktopOnlyOpen, setIsDesktopOnlyOpen] = useState(false)
   /** Документы, по которым в ветке СМС осталось ввести код */
   const [smsQueue, setSmsQueue] = useState<string[]>([])
   const [smsDone, setSmsDone] = useState(0)
@@ -184,6 +189,11 @@ export default function App() {
   }
 
   const handlePickMethod = (method: SignMethod) => {
+    // Подписать КЭП можно только с компьютера — в адаптиве показываем заглушку
+    if (method === 'kep' && isAdaptive) {
+      setIsDesktopOnlyOpen(true)
+      return
+    }
     const available = unsigned.filter((doc) => supports(doc, method))
     setActiveMethod(method)
     setCheckedIds(available.map((doc) => doc.id))
@@ -269,6 +279,8 @@ export default function App() {
         avatarInitials={CLIENT_INITIALS}
         hasSelect={false}
       />
+
+      {isDesktopOnlyOpen && <DesktopOnlyScreen onBack={() => setIsDesktopOnlyOpen(false)} />}
 
       {alert && (
         <div className="page-alert">

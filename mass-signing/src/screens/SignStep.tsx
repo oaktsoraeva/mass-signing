@@ -1,5 +1,6 @@
 import { Cell, CellLeftAccessory, Footer, NavigationBar, PageLayout } from '@ds'
 import { BubbleListShort, USBFlashDrive } from '@ds/icons'
+import { ADAPTIVE_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
 import type { SignMethod } from '../types'
 
 interface SignStepProps {
@@ -23,13 +24,14 @@ export function SignStep({
   onBack,
   onFinish,
 }: SignStepProps) {
+  const isAdaptive = useMediaQuery(ADAPTIVE_QUERY)
   const signedCount = signedByKep + signedBySms
 
   return (
     <>
       <PageLayout
         size="s"
-        topOffset={74}
+        topOffset={isAdaptive ? 0 : 74}
         navigationBar={
           <NavigationBar
             title="Подписание и отправка"
@@ -43,6 +45,12 @@ export function SignStep({
               { kind: 'step', label: 'Куда отправить', state: 'completed', onClick: onBack },
               { kind: 'step', label: 'Как подписать', state: 'current' },
             ]}
+            /* В адаптиве шаги превращаются в полоску прогресса */
+            titleVariant="step-progress"
+            progress={{ value: 2, maxSteps: 2, ariaLabel: 'Шаг 2 из 2' }}
+            rightAccessoryVariant="none"
+            leftAriaLabel="Назад"
+            onLeftClick={onBack}
           />
         }
         rightPanel={

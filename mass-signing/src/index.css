@@ -272,6 +272,16 @@ body {
   --tag-text-color: var(--primitive-success);
 }
 
+.tag.status-tag--neutral {
+  --tag-surface-color: var(--bg-neutral-2);
+  --tag-text-color: var(--primitive-secondary);
+}
+
+.tag.status-tag--error {
+  --tag-surface-color: var(--bg-error-2);
+  --tag-text-color: var(--primitive-error);
+}
+
 /* Аватар контрагента с логотипом оператора ЭДО */
 
 .contractor-avatar {
@@ -791,4 +801,241 @@ body {
   color: var(--primitive-brand);
   cursor: pointer;
   font: inherit;
+}
+
+/* ─── Адаптив ────────────────────────────────────────────────────────── */
+
+/* Карточка документа: в адаптиве колонки таблицы складываются в строки,
+   а индикаторы «НДС» и «1С» показываются тегами с подписью */
+
+.doc-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-0-5x);
+}
+
+.doc-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-2-5x) var(--spacing-5x);
+  border-radius: var(--rounding-2x);
+  background: var(--container-transparent-1);
+}
+
+/* Кебаб и чекбокс стоят только у первой строки, теги идут во всю ширину */
+.doc-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-5x);
+}
+
+.doc-card__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--spacing-0-5x);
+  min-width: 0;
+}
+
+.doc-card__title,
+.doc-card__contractor,
+.doc-card__amount {
+  margin: 0;
+}
+
+.doc-card__contractor {
+  color: var(--primitive-secondary);
+}
+
+.doc-card__amount {
+  margin-top: var(--spacing-2x);
+}
+
+.doc-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2-5x);
+  margin-top: var(--spacing-2-5x);
+}
+
+.doc-card__action {
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+}
+
+.doc-page__filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1x);
+}
+
+.doc-page__select-mode {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2-5x);
+  margin-left: auto;
+}
+
+/* Экран-заглушка вместо подписания КЭП */
+
+.desktop-only {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  background: var(--page-primary);
+}
+
+.desktop-only__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-5x);
+  padding: var(--spacing-20x) var(--spacing-5x) 0;
+  text-align: center;
+}
+
+.desktop-only__image {
+  margin-bottom: var(--spacing-5x);
+}
+
+.desktop-only__title,
+.desktop-only__text {
+  margin: 0;
+}
+
+.desktop-only__text {
+  max-width: 320px;
+  color: var(--primitive-secondary);
+}
+
+@media (max-width: 1023px) {
+  /* Шапку банка заменяет мобильная панель самого экрана */
+  .main-page-navigation-bar {
+    display: none;
+  }
+
+  /* Плашка ложится под мобильную шапку, а не над ней */
+  .page-alert {
+    position: fixed;
+    top: 64px;
+    right: 0;
+    left: 0;
+    z-index: 110;
+  }
+
+  /* Иначе колонка контента растягивается и уносит панель счётчика вниз */
+  .page-layout__content-wrapper {
+    flex: 0 0 auto;
+  }
+
+  .wizard-page {
+    padding-bottom: 0;
+  }
+
+  .sign-panel {
+    padding-bottom: var(--spacing-24x);
+  }
+
+  /* Окно ввода кода в макете занимает весь экран */
+  .modal {
+    padding: 0;
+  }
+
+  .modal__panel {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .sms-code {
+    flex: 1 1 auto;
+  }
+
+  /* «Тарифы» переезжают в мобильную панель, вкладки занимают всю ширину */
+  .doc-page__tabs-row .header-button:not(.doc-page__settings .header-button) {
+    display: none;
+  }
+
+  .doc-page__tabs-row {
+    display: block;
+  }
+
+  .doc-page__actions-row .header-button {
+    flex-shrink: 0;
+  }
+
+  /* Поиск на своей строке, под ним фильтры и режим выбора */
+  .doc-page__toolbar {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-template-areas:
+      "search search search"
+      "filters chip mode";
+    row-gap: var(--spacing-4x);
+  }
+
+  .doc-page__search {
+    grid-area: search;
+  }
+
+  .doc-page__toolbar > .icon-button {
+    grid-area: filters;
+  }
+
+  .doc-page__filter-menu {
+    grid-area: chip;
+  }
+
+  .doc-page__select-mode {
+    grid-area: mode;
+  }
+
+  /* В макете кнопки футера в колонку, «Подписать и отправить» сверху */
+  .doc-footer .footer__buttons--inline {
+    flex-direction: column-reverse;
+    gap: var(--spacing-2-5x);
+  }
+
+  .doc-footer .footer__buttons--inline .footer__button.button {
+    width: 100%;
+  }
+
+  .wizard-page__title {
+    font-size: 28px;
+    line-height: 32px;
+  }
+
+  /* Подсказка занимает всю ширину, кнопка уезжает под текст */
+  .coach {
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    width: auto;
+  }
+
+  .coach__button {
+    width: 100%;
+  }
+
+  /* Шторки разворачиваются во весь экран */
+  .drawer__panel {
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  .drawer__overlay {
+    background: none;
+  }
+
+  .doc-page__toast {
+    right: var(--spacing-5x);
+    left: var(--spacing-5x);
+    max-width: none;
+  }
 }

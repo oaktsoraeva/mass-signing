@@ -161,7 +161,7 @@ export const INITIAL_DOCUMENTS: DocumentRow[] = [
     vat: '20%',
     status: 'awaiting_signature',
     isKepOnlyType: false,
-    oneCStatus: 'pending',
+    oneC: { status: 'pending', label: `Обрабатывается в${NB}1С` },
   },
   {
     id: 'schet-92',
@@ -173,7 +173,7 @@ export const INITIAL_DOCUMENTS: DocumentRow[] = [
     vat: '20%',
     status: 'awaiting_payment',
     isKepOnlyType: false,
-    oneCStatus: 'error',
+    oneC: { status: 'error', label: 'Отклонён 1С' },
   },
   {
     id: 'dogovor-14',
@@ -200,8 +200,8 @@ export const INITIAL_DOCUMENTS: DocumentRow[] = [
     vat: '20%',
     status: 'signed',
     isKepOnlyType: true,
-    ndsStatus: 'pending',
-    oneCStatus: 'ok',
+    nds: { status: 'pending', label: `Вносим в декларацию по${NB}НДС` },
+    oneC: { status: 'ok', label: `Сохранён в${NB}ЭДО из${NB}1С` },
   },
   {
     id: 'schet-88',
@@ -228,7 +228,7 @@ export const INITIAL_DOCUMENTS: DocumentRow[] = [
     vat: '20%',
     status: 'awaiting_signature',
     isKepOnlyType: true,
-    oneCStatus: 'ok',
+    oneC: { status: 'ok', label: `Отправлен в${NB}1С` },
   },
   {
     id: 'upd-59',
@@ -273,7 +273,7 @@ export const INITIAL_DOCUMENTS: DocumentRow[] = [
     vat: '20%',
     status: 'awaiting_signature',
     isKepOnlyType: false,
-    oneCStatus: 'pending',
+    oneC: { status: 'pending', label: `Обрабатывается в${NB}1С` },
   },
   {
     id: 'ds-4',

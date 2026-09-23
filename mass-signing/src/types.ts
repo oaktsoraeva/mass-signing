@@ -25,6 +25,16 @@ export type DocStatus = 'awaiting_signature' | 'awaiting_payment' | 'signed'
 export type ColumnStatus = 'ok' | 'pending' | 'error'
 
 /**
+ * На десктопе это иконка в своей колонке, в адаптиве — тег с подписью.
+ * Подпись у одного и того же статуса разная («Отправлен в 1С» и
+ * «Сохранён в ЭДО из 1С» — оба `ok`), поэтому лежит в данных.
+ */
+export interface ColumnIndicator {
+  status: ColumnStatus
+  label: string
+}
+
+/**
  * Почему документ выпадает из подписания.
  * `fix` — секция «К исправлению», `skip` — «Не нужно подписывать».
  */
@@ -53,8 +63,8 @@ export interface DocumentRow {
    * Документ становится «только КЭП» и по роумингу — см. `supportsMethod`.
    */
   isKepOnlyType: boolean
-  ndsStatus?: ColumnStatus
-  oneCStatus?: ColumnStatus
+  nds?: ColumnIndicator
+  oneC?: ColumnIndicator
   block?: SignBlock
 }
 
