@@ -11,7 +11,7 @@ interface KepOnlyDrawerProps {
   onSwitchToKep: () => void
 }
 
-/** «Только КЭП» — документы, которые из ветки СМС подписать нельзя */
+/** «Подписать КЭП» — документы, которые из ветки СМС подписать нельзя */
 export function KepOnlyDrawer({
   isOpen,
   documents,
@@ -27,20 +27,19 @@ export function KepOnlyDrawer({
       className="sign-drawer"
       header={
         <DrawerHeader
-          title="Только КЭП"
+          title="Подписать КЭП"
           hasDefaultBackArrow
           onLeftAccessoryClick={onBack}
           onClose={onClose}
         />
       }
       footer={
-        <DrawerFooter layout="1-button" primaryAction={{ label: 'Подписать КЭП', onClick: onSwitchToKep }} />
+        <DrawerFooter layout="1-button" primaryAction={{ label: 'Подписать', onClick: onSwitchToKep }} />
       }
     >
       <div className="drawer-body">
         <p className="ts-400-m drawer-body__hint">
-          Эти документы можно подписать только электронной подписью. К&nbsp;ним можно вернуться
-          после подписания остальных документов СМС-кодом.
+          Эти документы не&nbsp;получится подписать смс-кодом&nbsp;— только электронной подписью
         </p>
 
         <div className="sign-list">

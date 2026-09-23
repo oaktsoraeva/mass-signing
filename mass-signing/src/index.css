@@ -335,19 +335,8 @@ body {
   gap: var(--content-element-list-spacing);
 }
 
-.cp-group__header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2x);
-}
-
-.cp-group__title,
-.cp-group__caption {
+.cp-group__title {
   margin: 0;
-}
-
-.cp-group__caption {
-  color: var(--primitive-secondary);
 }
 
 .cp-list {
@@ -364,23 +353,16 @@ body {
   cursor: pointer;
 }
 
+/* В макете ИНН и система ЭДО — две отдельные строки под названием */
 .cp-row__inn,
 .cp-row__operator {
+  display: block;
   color: var(--primitive-secondary);
 }
 
 /* В макете при валидации вместо ИНН красная подсказка */
 .cp-row__error {
   color: var(--primitive-error);
-}
-
-.cp-row__trash {
-  display: flex;
-  border: 0;
-  padding: 0;
-  background: none;
-  color: var(--primitive-neutral-4);
-  cursor: pointer;
 }
 
 /* Cell красит заголовок аккордеона в secondary, в макете он основной */
@@ -654,18 +636,6 @@ body {
    подписи называются одинаково, поэтому выбранную отмечаем сами */
 .cert-option:not(.cert-option--selected) .dropdown-popup__checkmark {
   visibility: hidden;
-}
-
-/* «Не получится подписать» */
-
-.blocked-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--content-element-list-spacing);
-}
-
-.blocked-group__title {
-  margin: 0;
 }
 
 /* Карточка документа */

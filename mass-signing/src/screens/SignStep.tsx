@@ -100,7 +100,7 @@ export function SignStep({
       <Footer
         className="footer--neutral"
         layout="1-button"
-        primaryAction={{ label: 'Завершить подписание', onClick: onFinish }}
+        primaryAction={{ label: 'Выйти на главную ЭДО', onClick: onFinish }}
       />
     </>
   )

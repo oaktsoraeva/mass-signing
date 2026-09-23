@@ -8,7 +8,7 @@ import {
   FlowResultView,
   MainPageNavigationBar,
 } from '@ds'
-import { ArrowRightOutgoingRectangleVertical, Trash } from '@ds/icons'
+import { ArrowRightOutgoingRectangleVertical } from '@ds/icons'
 import { DocumentListScreen } from './screens/DocumentListScreen'
 import { SendStep } from './screens/SendStep'
 import { SignStep } from './screens/SignStep'
@@ -47,9 +47,7 @@ export default function App() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   // Шаг «Куда отправить»
-  const [removedContractorIds, setRemovedContractorIds] = useState<string[]>([])
   const [drawerContractorId, setDrawerContractorId] = useState<string | null>(null)
-  const [pendingRemovalId, setPendingRemovalId] = useState<string | null>(null)
   const [isMappedOpen, setIsMappedOpen] = useState(false)
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false)
   const [hasSendValidationError, setHasSendValidationError] = useState(false)
@@ -85,16 +83,15 @@ export default function App() {
     [contractors],
   )
 
-  /** Контрагенты выбранных документов — в порядке документов, без повторов и убранных */
+  /** Контрагенты выбранных документов — в порядке документов, без повторов */
   const batch = useMemo(() => {
     const ids: string[] = []
     for (const doc of documents) {
       if (!selectedIds.includes(doc.id)) continue
-      if (removedContractorIds.includes(doc.contractorId)) continue
       if (!ids.includes(doc.contractorId)) ids.push(doc.contractorId)
     }
     return ids.map((id) => contractorById[id]).filter(Boolean)
-  }, [documents, selectedIds, removedContractorIds, contractorById])
+  }, [documents, selectedIds, contractorById])
 
   const unmapped = batch.filter((c) => c.operator === null)
   const mapped = batch.filter((c) => c.operator !== null)
@@ -102,13 +99,8 @@ export default function App() {
   /** Документы партии на шаге «Как подписать» */
   const batchDocuments = useMemo(
     () =>
-      documents.filter(
-        (doc) =>
-          selectedIds.includes(doc.id) &&
-          !removedContractorIds.includes(doc.contractorId) &&
-          !removedDocIds.includes(doc.id),
-      ),
-    [documents, selectedIds, removedContractorIds, removedDocIds],
+      documents.filter((doc) => selectedIds.includes(doc.id) && !removedDocIds.includes(doc.id)),
+    [documents, selectedIds, removedDocIds],
   )
 
   /** Исправленный документ перестаёт считаться проблемным */
@@ -148,7 +140,6 @@ export default function App() {
   /** Шаг «Куда отправить» нужен, только если хотя бы у одного контрагента нет системы ЭДО */
   const handleStartSigning = () => {
     const needsOperator = batch.some((c) => c.operator === null)
-    setRemovedContractorIds([])
     setRemovedDocIds([])
     setSignedIds({})
     setFixedIds([])
@@ -166,13 +157,6 @@ export default function App() {
     setDrawerContractorId(null)
     setHasSendValidationError(false)
     setAlert('Контрагент изменён')
-  }
-
-  const handleConfirmRemoval = () => {
-    if (!pendingRemovalId) return
-    setRemovedContractorIds((prev) => [...prev, pendingRemovalId])
-    setPendingRemovalId(null)
-    setAlert('Контрагент удалён из списка')
   }
 
   const handleContinueFromSend = () => {
@@ -261,7 +245,6 @@ export default function App() {
   const commitAndExit = () => {
     setDocuments((prev) => prev.map((doc) => (signedIds[doc.id] ? { ...doc, status: 'signed' } : doc)))
     setSelectedIds([])
-    setRemovedContractorIds([])
     setRemovedDocIds([])
     setSignedIds({})
     setFixedIds([])
@@ -314,7 +297,6 @@ export default function App() {
           onDismissOnboarding={() => setHasSeenOnboarding(true)}
           hasValidationError={hasSendValidationError}
           onOpenContractor={setDrawerContractorId}
-          onRemoveContractor={setPendingRemovalId}
           onBack={() => setScreen('list')}
           onContinue={handleContinueFromSend}
         />
@@ -397,7 +379,11 @@ export default function App() {
         isOpen={resultCount !== null}
         state="success"
         title={resultCount === 1 ? 'Документ подписан!' : 'Документы подписаны!'}
-        text="Подписали и отправили документы контрагентам"
+        text={
+          resultCount === 1
+            ? 'Контрагент увидит его в своём ЭДО'
+            : 'Контрагенты увидят их в своих ЭДО'
+        }
         onDone={handleResultDone}
       />
 
@@ -437,32 +423,15 @@ export default function App() {
       />
 
       <ActionSheet
-        isOpen={pendingRemovalId !== null}
-        onClose={() => setPendingRemovalId(null)}
-        header={
-          <ActionSheetHeader title="Удалить контрагента из списка? Документы с ним не будут подписаны." />
-        }
-        footer={<ActionSheetFooter onClick={() => setPendingRemovalId(null)} />}
-      >
-        <ActionSheetButton
-          title="Удалить"
-          variant="danger"
-          hasIcon
-          icon={<Trash />}
-          onClick={handleConfirmRemoval}
-        />
-      </ActionSheet>
-
-      <ActionSheet
         isOpen={isFinishOpen}
         onClose={() => setIsFinishOpen(false)}
         header={
-          <ActionSheetHeader title="Завершить подписание? Неподписанные документы придётся выбрать заново. Подписанные документы сохранятся." />
+          <ActionSheetHeader title="Точно хотите выйти на главную ЭДО? Документы, которые вы не успели подписать, нужно будет выбрать заново." />
         }
         footer={<ActionSheetFooter onClick={() => setIsFinishOpen(false)} />}
       >
         <ActionSheetButton
-          title="Завершить подписание"
+          title="Выйти"
           hasIcon
           icon={<ArrowRightOutgoingRectangleVertical />}
           onClick={commitAndExit}

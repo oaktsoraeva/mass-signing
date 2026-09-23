@@ -26,7 +26,7 @@ const TABS = ['Документооборот', 'Перевозки', 'Чеки'
 /** Колонки из макета: чекбокс 64 · Документ 269 · Контрагент flex · Сумма 160 · НДС/1С/файл 80 · меню 64 */
 const TABLE_COLUMNS = 'var(--doc-table-columns)'
 
-const VALIDATION_MESSAGE = 'Выберите хотя бы 1 документ на подпись'
+const VALIDATION_MESSAGE = 'Выберите документ, который нужно подписать'
 
 function pluralizeDocuments(count: number) {
   const tail = count % 100
@@ -284,7 +284,7 @@ export function DocumentListScreen({
               : `Выбрано ${selectedIds.length} ${pluralizeDocuments(selectedIds.length)}`
           }
           secondaryAction={{ label: 'Отправить в 1С', onClick: handleSendTo1C }}
-          primaryAction={{ label: 'Подписать', onClick: handleSign }}
+          primaryAction={{ label: 'Подписать и отправить', onClick: handleSign }}
         />
       )}
 

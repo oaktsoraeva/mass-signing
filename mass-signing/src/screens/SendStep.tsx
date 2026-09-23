@@ -1,5 +1,4 @@
-import { AccordeonCell, Cell, CellRightAccessory, Footer, NavigationBar, PageLayout } from '@ds'
-import { Trash } from '@ds/icons'
+import { AccordeonCell, Cell, Footer, NavigationBar, PageLayout } from '@ds'
 import { EDO_OPERATORS } from '../data'
 import { ContractorAvatar } from '../components/ContractorAvatar'
 import type { Contractor } from '../types'
@@ -17,7 +16,6 @@ interface SendStepProps {
   /** Проставляется, когда «Продолжить» нажали с незаполненными операторами */
   hasValidationError: boolean
   onOpenContractor: (id: string) => void
-  onRemoveContractor: (id: string) => void
   onBack: () => void
   onContinue: () => void
 }
@@ -31,12 +29,9 @@ export function SendStep({
   onDismissOnboarding,
   hasValidationError,
   onOpenContractor,
-  onRemoveContractor,
   onBack,
   onContinue,
 }: SendStepProps) {
-  const total = unmapped.length + mapped.length
-
   const renderRow = (contractor: Contractor, withOperator: boolean) => {
     const operator = EDO_OPERATORS.find((o) => o.id === contractor.operator)
 
@@ -45,8 +40,9 @@ export function SendStep({
         key={contractor.id}
         className="cp-row"
         leftAccessory={<ContractorAvatar contractor={contractor} />}
+        hasRightAccessory={false}
         title={contractor.name}
-        titleClassName="ts-500-l"
+        titleClassName="ts-400-l"
         description={
           !withOperator && hasValidationError ? (
             <span className="cp-row__error ts-500-s">Выберите систему ЭДО</span>
@@ -54,30 +50,10 @@ export function SendStep({
             <>
               <span className="cp-row__inn ts-400-s">ИНН: {contractor.inn}</span>
               {withOperator && operator && (
-                <span className="cp-row__operator ts-400-s"> {operator.name}</span>
+                <span className="cp-row__operator ts-400-s">{operator.name}</span>
               )}
             </>
           )
-        }
-        rightAccessory={
-          <CellRightAccessory
-            variant="custom"
-            content={
-              <button
-                type="button"
-                className="cp-row__trash"
-                aria-label={`Убрать ${contractor.name}`}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onRemoveContractor(contractor.id)
-                }}
-              >
-                <span className="ds-icon ds-icon--m" aria-hidden="true">
-                  <Trash />
-                </span>
-              </button>
-            }
-          />
         }
         onClick={() => onOpenContractor(contractor.id)}
       />
@@ -110,13 +86,7 @@ export function SendStep({
 
           {unmapped.length > 0 && (
             <section className="cp-group">
-              <div className="cp-group__header">
-                <p className="ts-500-xl cp-group__title">Система ЭДО не&nbsp;выбрана</p>
-                <p className="ts-400-s cp-group__caption">
-                  Вы впервые обмениваетесь документами с&nbsp;этими контрагентами&nbsp;— выберите,
-                  куда их&nbsp;отправить
-                </p>
-              </div>
+              <p className="ts-500-xl cp-group__title">Выберите ЭДО контрагента</p>
 
               <div className="cp-list">
                 {unmapped.map((contractor, index) => (
@@ -126,8 +96,7 @@ export function SendStep({
                     {showOnboarding && index === 0 && (
                       <div className="coach">
                         <p className="ts-500-s coach__text">
-                          Нажмите на контрагента и&nbsp;выберите оператора ЭДО, а&nbsp;мы запомним
-                          ваш выбор
+                          Нажмите на контрагента и&nbsp;выберите нужный ЭДО&nbsp;— запомним ваш выбор
                         </p>
                         <button
                           type="button"
@@ -149,12 +118,7 @@ export function SendStep({
               className="cp-accordeon"
               size="xl"
               chevronPosition="edge"
-              title="Система выбрана"
-              description={
-                unmapped.length === 0
-                  ? 'Для всех контрагентов уже знаем, куда отправить'
-                  : `Для ${mapped.length} из ${total} контрагентов уже знаем, куда отправить`
-              }
+              title="ЭДО уже выбран"
               isOpen={isMappedOpen}
               onOpenChange={onToggleMapped}
               contentSpacing="4x"
